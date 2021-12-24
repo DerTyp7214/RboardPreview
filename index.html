@@ -7,136 +7,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
     <link type="text/css" rel="stylesheet" href="fonts.css" />
-</head>
-
-<body>
+    <link type="text/css" rel="stylesheet" href="style.css" />
 
     <style>
         :root {
             --main-bg: #141d1a;
 
             --key-bg: #2a322f;
-            --key-color: white;
+            --key-color: #ffffff;
             --key-border-radius: 16px;
 
             --second-key-bg: #3f4945;
 
             --accent-bg: #7ef7d4;
-            --accent-fg: black;
+            --accent-fg: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <style>
+        html {
+            background-color: #1e1e1e;
         }
 
-        html,
-        body {
-            margin: 0;
-            font-family: 'Product Sans', monospace;
-            user-select: none;
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 32px;
+            height: 32px;
         }
 
-        .keyboard_body {
-            background-color: var(--main-bg);
-
-            width: 1080px;
-            height: 719px;
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
         }
 
-        .key_box {
-            display: grid;
-            grid-template-rows: repeat(4, 140px);
-        }
-
-        .keys {
-            width: 1080px;
-            display: grid;
-            justify-content: center;
-            grid-template-columns: repeat(10, auto);
-        }
-
-        .simple_key {
-            background-color: var(--key-bg);
-            color: var(--key-color);
-
-            border-radius: var(--key-border-radius);
-
-            width: 74px;
-            padding: 8px;
-            margin: 8px;
-            position: relative;
-        }
-
-        .second_color {
-            background-color: var(--second-key-bg);
-        }
-
-        .accent_color {
-            background-color: var(--accent-bg);
-            color: var(--accent-fg);
-        }
-
-        .space {
-            width: 394px;
-        }
-
-        .custom_key {
-            width: 127px;
-        }
-
-        .letter {
-            font-size: 60px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .secondary_letter {
-            color: var(--key-color);
-
-            font-size: 24px;
-            position: absolute;
-            top: 4px;
-            right: 8px;
-        }
-
-        .l123 {
-            font-size: 40px;
-            white-space: nowrap;
-        }
-
-        .shift,
-        .locale,
-        .backspace,
-        .return {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .emoji {
-            position: absolute;
-            top: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .shift path {
-            stroke: var(--key-color);
-        }
-
-        .locale path {
-            fill: var(--key-color);
-        }
-
-        .backspace path {
-            fill: var(--key-color);
-        }
-
-        .emoji path {
-            fill: var(--key-color);
-        }
-
-        .return path {
-            fill: var(--accent-fg);
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
         }
     </style>
 
@@ -154,7 +61,7 @@
                 <div class="simple_key"><span class="letter">o</span><span class="secondary_letter">9</span></div>
                 <div class="simple_key"><span class="letter">p</span><span class="secondary_letter">0</span></div>
             </div>
-            <div class="keys second_offset">
+            <div class="keys">
                 <div class="simple_key"><span class="letter">a</span></div>
                 <div class="simple_key"><span class="letter">s</span></div>
                 <div class="simple_key"><span class="letter">d</span></div>
@@ -234,6 +141,16 @@
         </div>
     </div>
 
+    <div class="settings">
+        <input id="main-bg" type="color" />
+        <input id="key-bg" type="color" />
+        <input id="key-color" type="color" />
+        <input id="second-key-bg" type="color" />
+        <input id="accent-bg" type="color" />
+        <input id="accent-fg" type="color" />
+    </div>
+
+    <script src="script.js"></script>
 </body>
 
 </html>
