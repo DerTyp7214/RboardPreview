@@ -19,7 +19,7 @@ jobs:
           node-version: '16'
 
       - name: Install Dependencies
-        run: npm install
+        run: yarn
 
       - name: Build Page
-        run: npm run build
+        run: yarn build
