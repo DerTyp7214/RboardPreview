@@ -73,7 +73,7 @@ body {
 
 .accent_color {
     background-color: var(--accent-bg);
-    color: var(--accent-fg);
+    color: var(--main-bg);
 }
 
 .space {
@@ -140,7 +140,7 @@ body {
 }
 
 .return path {
-    fill: var(--accent-fg);
+    fill: var(--main-bg);
 }
 
 .action path {
