@@ -3,9 +3,11 @@
 
     --key-bg: #2a322f;
     --key-color: #ffffff;
-    --key-border-radius: 16px;
+    --key-border-radius: .2em;
 
     --second-key-bg: #3f4945;
 
     --accent-bg: #7ef7d4;
+
+    --font-size: min(4vw, 4vh);
 }

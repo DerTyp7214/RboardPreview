@@ -5,33 +5,48 @@ body {
     user-select: none;
 }
 
+.settings {
+    font-size: var(--font-size);
+}
+
 .keyboard_body {
+    font-size: var(--font-size);
     background-color: var(--main-bg);
 
-    width: 1080px;
-    height: 719px;
+    width: 18em;
+    height: 12em;
 }
 
 .key_box {
     display: grid;
-    grid-template-rows: repeat(5, 140px);
+    grid-template-rows: repeat(5, 2.33em);
 }
 
 .keys {
-    width: 1080px;
+    width: 18em;
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(10, auto);
 }
 
 .top_bar {
-    margin-left: 10px;
-    margin-right: 10px;
-    width: 1060px;
+    margin-left: .16em;
+    margin-right: .16em;
+    width: 17.66em;
     display: grid;
-    padding-top: 12px;
+    padding-top: .2em;
     justify-content: space-between;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(3, auto);
+}
+
+.rec-bar {
+    width: 10em;
+    color: var(--key-color);
+    margin: auto;
+    display: grid;
+    text-align: center;
+    justify-content: space-between;
+    grid-template-columns: repeat(3, 3em);
 }
 
 .simple_key {
@@ -40,22 +55,22 @@ body {
 
     border-radius: var(--key-border-radius);
 
-    width: 74px;
-    padding: 8px;
-    margin: 8px;
+    width: 1.23em;
+    padding: .13em;
+    margin: .13em;
     position: relative;
 }
 
 .top_bar_key {
-    width: 74px;
-    padding: 8px;
+    width: 1.23em;
+    padding: .13em;
     position: relative;
 }
 
 .top_action {
-    width: 74px;
-    height: 74px;
-    padding: 8px;
+    width: 1.23em;
+    height: 1.23em;
+    padding: .13em;
     border-radius: 50%;
     position: relative;
 }
@@ -77,15 +92,15 @@ body {
 }
 
 .space {
-    width: 394px;
+    width: 6.56em;
 }
 
 .custom_key {
-    width: 127px;
+    width: 2.11em;
 }
 
 .letter {
-    font-size: 60px;
+    font-size: 1em;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -95,14 +110,14 @@ body {
 .secondary_letter {
     color: var(--key-color);
 
-    font-size: 24px;
+    font-size: .4em;
     position: absolute;
-    top: 4px;
-    right: 8px;
+    top: .15em;
+    right: .25em;
 }
 
 .l123 {
-    font-size: 40px;
+    font-size: .66em;
     white-space: nowrap;
 }
 
@@ -118,7 +133,7 @@ body {
 
 .emoji {
     position: absolute;
-    top: 15%;
+    top: .15em;
     left: 50%;
     transform: translateX(-50%);
 }

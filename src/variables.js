@@ -1,4 +1,6 @@
-const metadata = {
+export const colorVars = ['--main-bg', '--key-bg', '--key-color', '--second-key-bg', '--accent-bg']
+
+export const metadata = {
     format_version: 3,
     id: `web_${Date.now()}`,
     name: 'Rboard Web Theme Creator',
@@ -19,7 +21,7 @@ const metadata = {
     ]
 }
 
-const styleSheetMd = `@def color_header @web_color_bg;
+export const styleSheetMd = `@def color_header @web_color_bg;
 @def color_base @web_color_bg;
 @def color_icon_action @web_color_label;
 /* This value is not used for action key background, since it is special on material theme. */
@@ -829,7 +831,7 @@ alpha: 1;
 /* end of pill shaped key */
 `
 
-const styleSheetMdBorder = `;.keytop {
+export const styleSheetMdBorder = `;.keytop {
     elevation: 0;
     shadow_color: @web_color_key_bg;
     
