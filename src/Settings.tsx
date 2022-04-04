@@ -84,7 +84,7 @@ class Settings extends Component<SettingsProps> {
             </div>
         }
 
-        const generatePickers = () => colorVars.map(colorVar => <Picker colorVar={colorVar} submitColor={color => {
+        const generatePickers = () => colorVars.map(colorVar => <Picker key={colorVar} colorVar={colorVar} submitColor={color => {
             this.root.style.setProperty(colorVar, color.hex)
         }}/>)
 
