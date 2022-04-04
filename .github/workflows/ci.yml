@@ -23,3 +23,14 @@ jobs:
 
       - name: Build Page
         run: yarn build
+
+      - name: Push New Build
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'build'
+          destination-github-username: 'DerTyp7214'
+          destination-repository-name: 'dertyp7214.github.io'
+          user-email: lengwenath1@gmail.com
+          target-branch: main
