@@ -4,6 +4,7 @@ import { Color, ColorPicker, useColor } from 'react-color-palette'
 import ClickAwayListener from 'react-click-away-listener'
 import 'react-color-palette/lib/css/styles.css'
 import { Button, TextField } from '@mui/material';
+import { isMobile } from "react-device-detect";
 
 export interface SettingsProps {
     ref?: RefObject<Settings>
@@ -102,10 +103,10 @@ class Settings extends Component<SettingsProps> {
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                width: 'calc(18em * .8)',
+                width: `calc(18em * ${isMobile ? '1.15' : '.78'})`,
                 paddingTop: '.8em',
                 margin: 'auto',
-                transform: 'scale(1.3)'
+                transform: isMobile ? 'scale(.9)' : 'scale(1.3)'
             }}>
                 <TextField
                     id='theme-name'

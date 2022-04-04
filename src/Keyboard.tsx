@@ -4,6 +4,7 @@ import { cropCanvas, shadeColor } from './utils';
 import html2canvas from 'html2canvas';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { Box } from "@mui/material";
 
 export interface KeyboardProps {
     ref?: RefObject<Keyboard>;
@@ -13,6 +14,10 @@ export interface KeyboardProps {
 class Keyboard extends Component<KeyboardProps> {
 
     keyboardBody: RefObject<HTMLDivElement>
+
+    state = {
+        savingPicture: false
+    }
 
     constructor(props: any) {
         super(props)
@@ -36,9 +41,12 @@ class Keyboard extends Component<KeyboardProps> {
         if (!themeName?.length) themeName = metadata.id
         const escapedThemeName = themeName.replace(new RegExp(' ', 'g'), '_')
 
+        this.setState({ savingPicture: true })
+        await new Promise(res => setTimeout(res, 10))
         const canvas = await html2canvas(keyboardRef)
         const png = cropCanvas(canvas, 0, 0, canvas.width - 1, canvas.height - 1)
             .toDataURL('image/png').replace('data:image/png;base64,', '')
+        this.setState({ savingPicture: false })
 
         const themeZip = new JSZip()
 
@@ -68,7 +76,16 @@ class Keyboard extends Component<KeyboardProps> {
     }
 
     render() {
-        return <div className='keyboard_body' ref={this.keyboardBody} style={{margin: 'auto', borderRadius: '.5em', border: '.06em solid white'}}>
+        return <Box
+            className='keyboard_body'
+            ref={this.keyboardBody}
+            sx={[{ margin: 'auto' }, this.state.savingPicture ? {
+                borderRadius: 0,
+                border: '0px solid'
+            } : {
+                borderRadius: '.5em',
+                border: '.06em solid white'
+            }]}>
             <div className='key_box'>
                 <div className='top_bar'>
                     <div className='top_bar_key'>
@@ -206,7 +223,7 @@ class Keyboard extends Component<KeyboardProps> {
                     </div>
                 </div>
             </div>
-        </div>;
+        </Box>;
     }
 }
 
