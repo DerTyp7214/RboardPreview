@@ -78,22 +78,5 @@ author=DerTyp7214`)
     packZip.file(`${escapedThemeName}.zip`, await themeZip.generateAsync({type: 'base64'}), {base64: true})
     packZip.file(escapedThemeName, png, {base64: true})
 
-    downloadFile({
-        content: await packZip.generateAsync({type: 'blob'}),
-        name: `${themeName}.pack`
-    })
-}
-
-function downloadFile(file) {
-    if (navigator.msSaveBlob) {
-        return navigator.msSaveBlob(file.content, file.name);
-    } else {
-        let link = document.createElement('a');
-        link.href = window.URL.createObjectURL(file.content);
-        link.download = file.name;
-        document.body.appendChild(link);
-        link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
-        link.remove();
-        window.URL.revokeObjectURL(link.href);
-    }
+    saveAs(await packZip.generateAsync({type: 'blob'}), `${themeName}.pack`)
 }
