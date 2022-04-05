@@ -3,6 +3,13 @@ body {
     margin: 0;
     font-family: 'Product Sans', monospace;
     user-select: none;
+    height: 100%;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .settings {
