@@ -12,6 +12,7 @@ export interface SettingsProps {
     ref?: RefObject<Settings>
     exportTheme?: () => any;
     getThemeName?: () => string;
+    getAuthorName?: () => string;
     preset?: {
         mainBg: string;
         keyBg: string;
@@ -19,6 +20,7 @@ export interface SettingsProps {
         secondKeyBg: string;
         accentBg: string;
         themeName: string;
+        author: string;
     }
 }
 
@@ -29,6 +31,7 @@ class Settings extends Component<SettingsProps> {
 
     state = {
         name: '',
+        author: 'DerTyp7214',
         snackbar: {
             open: false,
             text: ''
@@ -47,9 +50,11 @@ class Settings extends Component<SettingsProps> {
                 keyColor,
                 secondKeyBg,
                 accentBg,
-                themeName
+                themeName,
+                author
             } = props.preset
             this.state.name = themeName
+            this.state.author = author
             this.root.style.setProperty('--main-bg', mainBg)
             this.root.style.setProperty('--key-bg', keyBg)
             this.root.style.setProperty('--key-color', keyColor)
@@ -60,6 +65,10 @@ class Settings extends Component<SettingsProps> {
 
     getThemeName() {
         return this.state.name
+    }
+
+    getAuthorName() {
+        return this.state.author
     }
 
     private refreshColors(custom: (cssVar: string, element: HTMLInputElement, cssValue: any) => any) {
@@ -91,7 +100,7 @@ class Settings extends Component<SettingsProps> {
             const [picking, setPicking] = useState(false)
             const [color, setColor] = useColor('hex', this.getAttrColor(props.colorVar))
 
-            return <div style={{ position: 'relative', display: 'inline-block' }}>
+            return <>
                 <div style={{
                     width: '2.6em', height: '2.6em',
                     borderRadius: '.5em', margin: '.5em',
@@ -104,8 +113,8 @@ class Settings extends Component<SettingsProps> {
                 {picking && <div style={{
                     position: 'absolute',
                     zIndex: 100,
-                    left: 'calc(calc(300px - 2.6em) / 2)',
-                    transform: 'translate(-50%, -50%)'
+                    left: '50%',
+                    transform: 'translateX(-50%)'
                 }}>
                     <ClickAwayListener onClickAway={() => {
                         props.submitColor(color)
@@ -120,7 +129,7 @@ class Settings extends Component<SettingsProps> {
                         </div>
                     </ClickAwayListener>
                 </div>}
-            </div>
+            </>
         }
 
         const generatePickers = () => colorVars.map(colorVar => <Picker
@@ -131,17 +140,42 @@ class Settings extends Component<SettingsProps> {
             }}/>
         )
 
-        return <div className='settings'>
+        return <div className='settings' style={{
+            position: 'relative'
+        }}>
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 alignContent: 'center',
-                paddingTop: '.8em',
-                width: '18em',
                 margin: 'auto'
             }}>
                 {generatePickers()}
+            </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: `calc(18em * ${isMobile ? '1.15' : '.78'})`,
+                paddingTop: '.8em',
+                margin: 'auto',
+                transform: isMobile ? 'scale(.9)' : 'scale(1.3)'
+            }}>
+                <TextField
+                    id='author'
+                    label='Author'
+                    variant='outlined'
+                    fullWidth
+                    sx={{
+                        margin: '8px',
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '.08em',
+                            borderRadius: '.5em'
+                        }
+                    }}
+                    defaultValue={this.state.author}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                        this.setState({ ...this.state, author: event.target.value })
+                    }}/>
             </div>
             <div style={{
                 display: 'flex',
@@ -167,7 +201,17 @@ class Settings extends Component<SettingsProps> {
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({ ...this.state, name: event.target.value })
                     }}/>
+            </div>
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: `calc(18em * ${isMobile ? '1.15' : '.78'})`,
+                paddingTop: '.8em',
+                margin: 'auto',
+                transform: isMobile ? 'scale(.9)' : 'scale(1.3)'
+            }}>
                 <Button
+                    fullWidth
                     variant='outlined'
                     color='primary'
                     onClick={this.props.exportTheme}
@@ -179,6 +223,7 @@ class Settings extends Component<SettingsProps> {
                     Export
                 </Button>
                 <Button
+                    fullWidth
                     variant='outlined'
                     color='primary'
                     onClick={() => {
@@ -190,6 +235,7 @@ class Settings extends Component<SettingsProps> {
                             url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
                             url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
                             url += `&themeName=${this.state.name}`
+                            url += `&author=${this.state.author}`
                             return url
                         }
                         if (navigator.share) navigator.share({

@@ -24,7 +24,7 @@ class Keyboard extends Component<KeyboardProps> {
         this.keyboardBody = createRef<HTMLDivElement>()
     }
 
-    async exportTheme(name: string) {
+    async exportTheme(name: string, author: string) {
         const root = document.documentElement
         const rootStyles = getComputedStyle(root)
 
@@ -40,6 +40,9 @@ class Keyboard extends Component<KeyboardProps> {
         let themeName = name.trim()
         if (!themeName?.length) themeName = metadata.id
         const escapedThemeName = themeName.replace(new RegExp(' ', 'g'), '_')
+
+        let authorName = author.trim()
+        if (!authorName?.length) authorName = 'DerTyp7214'
 
         this.setState({ savingPicture: true })
         await new Promise(res => setTimeout(res, 10))
@@ -68,7 +71,7 @@ class Keyboard extends Component<KeyboardProps> {
 
         const packZip = new JSZip()
 
-        packZip.file('pack.meta', `name=${themeName}\nauthor=DerTyp7214`)
+        packZip.file('pack.meta', `name=${themeName}\nauthor=${authorName}`)
         packZip.file(`${escapedThemeName}.zip`, await themeZip.generateAsync({ type: 'base64' }), { base64: true })
         packZip.file(escapedThemeName, png, { base64: true })
 
@@ -79,9 +82,9 @@ class Keyboard extends Component<KeyboardProps> {
         return <Box
             className='keyboard_body'
             ref={this.keyboardBody}
-            sx={[{ margin: 'auto' }, this.state.savingPicture ? {
+            sx={[{ marginTop: '.5em' }, this.state.savingPicture ? {
                 borderRadius: 0,
-                border: '0px solid'
+                border: '.06px solid var(--main-bg)'
             } : {
                 borderRadius: '.5em',
                 border: '.06em solid white'
