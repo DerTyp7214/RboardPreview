@@ -84,7 +84,7 @@ class Keyboard extends Component<KeyboardProps> {
             ref={this.keyboardBody}
             sx={[{ marginTop: '.5em' }, this.state.savingPicture ? {
                 borderRadius: 0,
-                border: '.06px solid var(--main-bg)'
+                border: '.06em solid var(--main-bg)'
             } : {
                 borderRadius: '.5em',
                 border: '.06em solid white'
