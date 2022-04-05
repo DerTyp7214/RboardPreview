@@ -53,8 +53,8 @@ class Settings extends Component<SettingsProps> {
                 themeName,
                 author
             } = props.preset
-            this.state.name = themeName
-            this.state.author = author
+            this.state.name = themeName ? decodeURIComponent(themeName) : themeName
+            this.state.author = themeName ? decodeURIComponent(author) : themeName
             this.root.style.setProperty('--main-bg', mainBg)
             this.root.style.setProperty('--key-bg', keyBg)
             this.root.style.setProperty('--key-color', keyColor)
@@ -234,8 +234,8 @@ class Settings extends Component<SettingsProps> {
                             url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
                             url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
                             url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
-                            url += `&themeName=${this.state.name}`
-                            url += `&author=${this.state.author}`
+                            url += `&themeName=${encodeURIComponent(this.state.name)}`
+                            url += `&author=${encodeURIComponent(this.state.author)}`
                             return url
                         }
                         if (navigator.share) navigator.share({
