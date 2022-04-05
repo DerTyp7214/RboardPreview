@@ -3,13 +3,23 @@ import { colorVars } from './variables'
 import { Color, ColorPicker, useColor } from 'react-color-palette'
 import ClickAwayListener from 'react-click-away-listener'
 import 'react-color-palette/lib/css/styles.css'
-import { Button, TextField } from '@mui/material';
-import { isMobile } from "react-device-detect";
+import { Button, Snackbar, TextField } from '@mui/material'
+import { isMobile } from 'react-device-detect'
+import { Share } from "@mui/icons-material";
+import { copyToClipboard } from "./utils";
 
 export interface SettingsProps {
     ref?: RefObject<Settings>
     exportTheme?: () => any;
     getThemeName?: () => string;
+    preset?: {
+        mainBg: string;
+        keyBg: string;
+        keyColor: string;
+        secondKeyBg: string;
+        accentBg: string;
+        themeName: string;
+    }
 }
 
 class Settings extends Component<SettingsProps> {
@@ -18,13 +28,34 @@ class Settings extends Component<SettingsProps> {
     rootStyles: CSSStyleDeclaration
 
     state = {
-        name: ''
+        name: '',
+        snackbar: {
+            open: false,
+            text: ''
+        }
     }
 
     constructor(props: Readonly<SettingsProps>) {
         super(props)
         this.root = document.documentElement
         this.rootStyles = getComputedStyle(this.root)
+
+        if (props.preset) {
+            const {
+                mainBg,
+                keyBg,
+                keyColor,
+                secondKeyBg,
+                accentBg,
+                themeName
+            } = props.preset
+            this.state.name = themeName
+            this.root.style.setProperty('--main-bg', mainBg)
+            this.root.style.setProperty('--key-bg', keyBg)
+            this.root.style.setProperty('--key-color', keyColor)
+            this.root.style.setProperty('--second-key-bg', secondKeyBg)
+            this.root.style.setProperty('--accent-bg', accentBg)
+        }
     }
 
     getThemeName() {
@@ -70,23 +101,35 @@ class Settings extends Component<SettingsProps> {
                     setPicking(true)
                 }
                 }/>
-                {picking && <div style={{ position: 'absolute', zIndex: 100, left: 'calc(calc(300px - 2.6em) / 2)', transform: 'translate(-50%, -50%)' }}>
+                {picking && <div style={{
+                    position: 'absolute',
+                    zIndex: 100,
+                    left: 'calc(calc(300px - 2.6em) / 2)',
+                    transform: 'translate(-50%, -50%)'
+                }}>
                     <ClickAwayListener onClickAway={() => {
                         props.submitColor(color)
                         setPicking(false)
                     }}>
                         <div onClick={(event) => event.persist()}>
-                            <ColorPicker width={300} color={color} onChange={setColor} dark
-                                         onChangeComplete={setColor}/>
+                            <ColorPicker
+                                width={300}
+                                color={color}
+                                onChange={setColor} dark
+                                onChangeComplete={setColor}/>
                         </div>
                     </ClickAwayListener>
                 </div>}
             </div>
         }
 
-        const generatePickers = () => colorVars.map(colorVar => <Picker key={colorVar} colorVar={colorVar} submitColor={color => {
-            this.root.style.setProperty(colorVar, color.hex)
-        }}/>)
+        const generatePickers = () => colorVars.map(colorVar => <Picker
+            key={colorVar}
+            colorVar={colorVar}
+            submitColor={color => {
+                this.root.style.setProperty(colorVar, color.hex)
+            }}/>
+        )
 
         return <div className='settings'>
             <div style={{
@@ -120,8 +163,9 @@ class Settings extends Component<SettingsProps> {
                             borderRadius: '.5em'
                         }
                     }}
+                    defaultValue={this.state.name}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                        this.setState({ name: event.target.value })
+                        this.setState({ ...this.state, name: event.target.value })
                     }}/>
                 <Button
                     variant='outlined'
@@ -134,8 +178,56 @@ class Settings extends Component<SettingsProps> {
                     }}>
                     Export
                 </Button>
+                <Button
+                    variant='outlined'
+                    color='primary'
+                    onClick={() => {
+                        const buildUrl = () => {
+                            let url = window.location.origin
+                            url += `?mainBg=${this.getAttrColor('--main-bg').substring(1)}`
+                            url += `&keyBg=${this.getAttrColor('--key-bg').substring(1)}`
+                            url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
+                            url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
+                            url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
+                            url += `&themeName=${this.state.name}`
+                            return url
+                        }
+                        if (navigator.share) navigator.share({
+                            url: buildUrl()
+                        }).then(() => {
+                        }).catch(() => {
+                            this.setState({
+                                ...this.state,
+                                snackbar: {
+                                    open: true,
+                                    text: 'Error while sharing url!'
+                                }
+                            })
+                        })
+                        else copyToClipboard(buildUrl()).then(() => {
+                            this.setState({
+                                ...this.state,
+                                snackbar: {
+                                    open: true,
+                                    text: 'Copied to Clipboard!'
+                                }
+                            })
+                        })
+                    }}
+                    sx={{
+                        margin: '8px',
+                        borderWidth: '.08em',
+                        borderRadius: '.5em'
+                    }}>
+                    <Share/>
+                </Button>
             </div>
-        </div>;
+            <Snackbar
+                open={this.state.snackbar.open}
+                autoHideDuration={6000}
+                onClose={() => this.setState({ ...this.state, snackbar: { open: false } })}
+                message={this.state.snackbar.text}/>
+        </div>
     }
 }
 

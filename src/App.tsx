@@ -13,11 +13,31 @@ function App() {
             await keyboardRef.current.exportTheme(settingsRef.current.getThemeName())
     }
 
+    const getPreset = () => {
+        const search = window.location.search
+        if (search.length < 1) return
+        const query: { [key: string]: string } = {}
+        search.substring(1).split('&').forEach(entry => query[entry.split('=')[0]] = entry.split('=')[1])
+        if (query['mainBg'] && query['keyBg'] && query['keyColor'] && query['secondKeyBg'] && query['accentBg']) {
+            return {
+                mainBg: `#${query['mainBg']}`,
+                keyBg: `#${query['keyBg']}`,
+                keyColor: `#${query['keyColor']}`,
+                secondKeyBg: `#${query['secondKeyBg']}`,
+                accentBg: `#${query['accentBg']}`,
+                themeName: query['themeName']
+            }
+        }
+    }
+
     return (
         <ThemeProvider theme={createTheme({ palette: { mode: 'dark', primary: { main: '#FFFFFF' } } })}>
             <div style={{ padding: 32 }}>
                 <Keyboard ref={keyboardRef}/>
-                <Settings exportTheme={exportTheme} ref={settingsRef}/>
+                <Settings
+                    exportTheme={exportTheme}
+                    ref={settingsRef}
+                    preset={getPreset()}/>
                 <MobileView>
                     <Typography variant='h2' sx={{
                         fontSize: 'var(--font-size)',

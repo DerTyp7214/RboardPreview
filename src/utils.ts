@@ -28,3 +28,8 @@ export const cropCanvas = (sourceCanvas: HTMLCanvasElement, left: number, top: n
         0, 0, width, height)
     return destCanvas
 }
+
+export const copyToClipboard = async (text: string) => {
+    if ('clipboard' in navigator) return await navigator.clipboard.writeText(text)
+    else document.execCommand('copy', true, text)
+}

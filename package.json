@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
+    "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.3",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
@@ -22,6 +23,7 @@
     "react-color-palette": "^6.2.0",
     "react-device-detect": "^2.1.2",
     "react-dom": "^18.0.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
