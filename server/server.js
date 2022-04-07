@@ -1,0 +1,94 @@
+import puppeteer from 'puppeteer'
+import express from 'express'
+import path from 'path'
+import fs from 'fs'
+
+const app = express()
+
+const buildPath = 'build'
+const serverPath = 'server'
+
+const parseHtml = (html, req) => {
+    const baseUrl = `${req.protocol}://${req.headers.host}`
+
+    const {
+        mainBg,
+        keyBg,
+        keyColor,
+        secondKeyBg,
+        accentBg
+    } = req.query
+
+    const buildUrl = (baseUrl) => {
+        let url = baseUrl
+
+        if (!mainBg || !keyBg || !keyColor || !secondKeyBg || !accentBg) return url
+
+        url += `?mainBg=${mainBg}`
+        url += `&keyBg=${keyBg}`
+        url += `&keyColor=${keyColor}`
+        url += `&secondKeyBg=${secondKeyBg}`
+        url += `&accentBg=${accentBg}`
+        return url
+    }
+
+    return html
+        .replace(new RegExp('{{PUBLIC_URL}}', 'g'), baseUrl)
+        .replace(new RegExp('{{IMAGE}}', 'g'), buildUrl(`${baseUrl}/preview`))
+}
+
+const run = async () => {
+    const browser = await puppeteer.launch()
+
+    const paths = [
+        'fonts',
+        'icons',
+        'images',
+        'static',
+        'styles',
+        'robots.txt',
+        'asset-manifest.json',
+        'manifest.webmanifest'
+    ]
+
+    for (const p of paths) app.use(`/${p}`, express.static(path.join(buildPath, p)))
+
+    app.get('/preview', async (req, res) => {
+        const page = await browser.newPage()
+        await page.setContent(fs.readFileSync(path.join(serverPath, 'keyboard.html'), 'utf8'), {waitUntil: 'networkidle0'})
+        await page.evaluate(query => {
+            const {
+                mainBg,
+                keyBg,
+                keyColor,
+                secondKeyBg,
+                accentBg
+            } = query
+
+            const root = document.documentElement
+
+            if (mainBg) root.style.setProperty('--main-bg', mainBg)
+            if (keyBg) root.style.setProperty('--key-bg', keyBg)
+            if (keyColor) root.style.setProperty('--key-color', keyColor)
+            if (secondKeyBg) root.style.setProperty('--second-key-bg', secondKeyBg)
+            if (accentBg) root.style.setProperty('--accent-bg', accentBg)
+        }, req.query)
+        await page.waitForSelector('.keyboard_body')
+        const element = await page.$('.keyboard_body')
+        res.set('Content-Type', 'image/png')
+        res.send(await element.screenshot())
+    })
+
+    app.get('/', (req, res) => {
+        if (fs.existsSync(path.join(buildPath, 'index.html'))) {
+            const html = fs.readFileSync(path.join(buildPath, 'index.html'), 'utf-8')
+
+            res.setHeader('content-type', 'text/html')
+            res.send(parseHtml(html, req))
+        } else res.sendStatus(404)
+    })
+
+    app.listen(process.env.PORT ?? 1234)
+}
+
+run().then(() => console.log('Started'))
