@@ -18,7 +18,9 @@ const parseHtml = (html, req) => {
         keyBg,
         keyColor,
         secondKeyBg,
-        accentBg
+        accentBg,
+        themeName,
+        author
     } = req.query
 
     const buildUrl = (baseUrl) => {
@@ -37,6 +39,7 @@ const parseHtml = (html, req) => {
     return html
         .replace(new RegExp('{{PUBLIC_URL}}', 'g'), baseUrl)
         .replace(new RegExp('{{IMAGE}}', 'g'), buildUrl(`${baseUrl}/preview`))
+        .replace(new RegExp('{{DESCRIPTION}}', 'g'), `${themeName ?? 'Theme'} by ${author ?? 'DerTyp7214'}`)
 }
 
 const run = async () => {
