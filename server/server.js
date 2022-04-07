@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import puppeteer from 'puppeteer'
 import express from 'express'
 import path from 'path'
@@ -9,7 +11,7 @@ const buildPath = 'build'
 const serverPath = 'server'
 
 const parseHtml = (html, req) => {
-    const baseUrl = `${req.protocol}://${req.headers.host}`
+    const baseUrl = process.env.URL ?? `${req.protocol}://${req.headers.host}`
 
     const {
         mainBg,
