@@ -61,6 +61,10 @@ const run = async () => {
     app.get('/preview', async (req, res) => {
         const page = await browser.newPage()
         await page.setContent(fs.readFileSync(path.join(serverPath, 'keyboard.html'), 'utf8'), {waitUntil: 'networkidle0'})
+        await page.on('console', async (msg) => {
+            const msgArgs = msg.args()
+            for (const arg of msgArgs) console.log(await arg.jsonValue())
+        })
         await page.evaluate(query => {
             const {
                 mainBg,
@@ -72,11 +76,11 @@ const run = async () => {
 
             const root = document.documentElement
 
-            if (mainBg) root.style.setProperty('--main-bg', mainBg)
-            if (keyBg) root.style.setProperty('--key-bg', keyBg)
-            if (keyColor) root.style.setProperty('--key-color', keyColor)
-            if (secondKeyBg) root.style.setProperty('--second-key-bg', secondKeyBg)
-            if (accentBg) root.style.setProperty('--accent-bg', accentBg)
+            if (mainBg) root.style.setProperty('--main-bg', `#${mainBg}`)
+            if (keyBg) root.style.setProperty('--key-bg', `#${keyBg}`)
+            if (keyColor) root.style.setProperty('--key-color', `#${keyColor}`)
+            if (secondKeyBg) root.style.setProperty('--second-key-bg', `#${secondKeyBg}`)
+            if (accentBg) root.style.setProperty('--accent-bg', `#${accentBg}`)
         }, req.query)
         await page.waitForSelector('.keyboard_body')
         const element = await page.$('.keyboard_body')

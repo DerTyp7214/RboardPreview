@@ -162,26 +162,26 @@ body {
     transform: translateX(-50%);
 }
 
-.shift path {
-    stroke: var(--key-color);
+.shift {
+    color: var(--key-color);
 }
 
-.locale path {
-    fill: var(--key-color);
+.locale {
+    color: var(--key-color);
 }
 
-.backspace path {
-    fill: var(--key-color);
+.backspace {
+    color: var(--key-color);
 }
 
-.emoji path {
-    fill: var(--key-color);
+.emoji {
+    color: var(--key-color);
 }
 
-.return path {
-    fill: var(--main-bg);
+.return {
+    color: var(--main-bg);
 }
 
-.action path {
-    fill: var(--key-color)
+.action {
+    color: var(--key-color)
 }
