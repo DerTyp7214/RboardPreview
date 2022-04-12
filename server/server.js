@@ -10,7 +10,7 @@ const app = express()
 const buildPath = 'build'
 const serverPath = 'server'
 
-const secretKey = process.SECRET_KEY
+const secretKey = process.env.SECRET_KEY
 
 const parseHtml = (html, req) => {
     const baseUrl = process.env.PUBLIC_URL ?? `${req.protocol}://${req.headers.host}`

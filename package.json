@@ -44,7 +44,7 @@
     "eject": "react-scripts eject",
     "server": "node server/server.js",
     "updateServer": "node workflow/updateServer.js",
-    "pm2": "pm2 start \"yarn build; node server/server.js\" --name Server"
+    "pm2": "pm2 start \"git pull; yarn build; node server/server.js\" --name Server"
   },
   "eslintConfig": {
     "extends": [

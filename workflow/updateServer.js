@@ -2,8 +2,8 @@ import 'dotenv/config'
 
 import fetch from 'node-fetch'
 
-const baseUrl = process.PUBLIC_URL
-const url = `${baseUrl}/update/${process.SECRET_KEY}`
+const baseUrl = process.env.PUBLIC_URL
+const url = `${baseUrl}/update/${process.env.SECRET_KEY}`
 
 const run = async () => {
     await fetch(url).then(body => body.text()).then(console.log).catch(console.log)
