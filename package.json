@@ -34,13 +34,17 @@
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "pm2": "^5.2.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server/server.js",
-    "updateServer": "node workflow/updateServer.js"
+    "updateServer": "node workflow/updateServer.js",
+    "pm2": "pm2 start \"yarn build; node server/server.js\" --name Server"
   },
   "eslintConfig": {
     "extends": [
