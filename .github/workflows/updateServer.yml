@@ -21,5 +21,8 @@ jobs:
       - name: Install Dependencies
         run: yarn
 
+      - name: Set env vars
+        run: echo "SECRET_KEY={{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+
       - name: Update Server
-        run: SECRET_KEY={{ SECRET_KEY }}; yarn run updateServer
+        run: yarn run updateServer

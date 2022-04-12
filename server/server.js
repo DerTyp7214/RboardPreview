@@ -94,7 +94,9 @@ const run = async () => {
     app.get('/update/:key', (req, res) => {
         if (req.params.key === secretKey) {
             res.send('Shutting down.')
-            childProcess.spawnSync('yarn build')
+            childProcess.spawnSync('yarn build', [], {
+                cwd: process.cwd()
+            })
             process.exit()
         } else res.status(401)
     })
