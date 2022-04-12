@@ -14,8 +14,10 @@ const run = async () => {
         let alive = false
         let stopChecking = false
         const check = async () => {
-            await fetch(`${baseUrl}/status`).then(body => body.json()).then(json => alive = !!json.alive).catch(console.log)
+            await fetch(`${baseUrl}/status`).then(body => body.json()).then(json => alive = !!json.alive).catch(() => {
+            })
             await new Promise(res => setTimeout(res, 500))
+            if (alive) return resolve()
             if (!stopChecking) await check()
             else reject()
         }
