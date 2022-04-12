@@ -1,5 +1,6 @@
 import 'dotenv/config'
 
+import childProcess from 'child_process'
 import puppeteer from 'puppeteer'
 import express from 'express'
 import path from 'path'
@@ -93,6 +94,7 @@ const run = async () => {
     app.get('/update/:key', (req, res) => {
         if (req.params.key === secretKey) {
             res.send('Shutting down.')
+            childProcess.spawnSync('yarn build')
             process.exit()
         } else res.status(401)
     })
