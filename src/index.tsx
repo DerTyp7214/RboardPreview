@@ -3,7 +3,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import TagManager from 'react-gtm-module'
 import App from './App'
 
-TagManager.initialize({ gtmId: 'G-V0YXM60BWK' })
+TagManager.initialize({
+    gtmId: 'G-V0YXM60BWK',
+    events: {
+        action: 'open'
+    }
+})
 
 const container = document.getElementById('root')
 if (container) {

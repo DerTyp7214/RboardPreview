@@ -10,8 +10,10 @@ const app = express()
 const buildPath = 'build'
 const serverPath = 'server'
 
+const secretKey = process.SECRET_KEY
+
 const parseHtml = (html, req) => {
-    const baseUrl = process.env.URL ?? `${req.protocol}://${req.headers.host}`
+    const baseUrl = process.env.PUBLIC_URL ?? `${req.protocol}://${req.headers.host}`
 
     const {
         mainBg,
@@ -86,6 +88,17 @@ const run = async () => {
         const element = await page.$('.keyboard_body')
         res.set('Content-Type', 'image/png')
         res.send(await element.screenshot())
+    })
+
+    app.get('/update/:key', (req, res) => {
+        if (req.params.key === secretKey) {
+            res.send('Shutting down.')
+            process.exit()
+        } else res.status(401)
+    })
+
+    app.get('/status', (req, res) => {
+        res.json({status: 'ok', alive: true})
     })
 
     app.get('/', (req, res) => {
