@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import fetch from 'node-fetch'
 
 const baseUrl = process.PUBLIC_URL
