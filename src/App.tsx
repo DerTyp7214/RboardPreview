@@ -3,6 +3,7 @@ import Keyboard from './Keyboard'
 import Settings from './Settings'
 import { createTheme, Grid, ThemeProvider, Typography } from '@mui/material'
 import { MobileView } from 'react-device-detect'
+import TagManager from 'react-gtm-module'
 
 function App() {
     const keyboardRef = useRef<Keyboard>(null)
@@ -21,6 +22,12 @@ function App() {
         if (search.length < 1) return
         const query: { [key: string]: string } = {}
         search.substring(1).split('&').forEach(entry => query[entry.split('=')[0]] = entry.split('=')[1])
+
+        TagManager.dataLayer({
+            dataLayer: query,
+            dataLayerName: 'Custom Color Preset'
+        })
+
         if (query['mainBg'] && query['keyBg'] && query['keyColor'] && query['secondKeyBg'] && query['accentBg']) {
             return {
                 mainBg: `#${query['mainBg']}`,
