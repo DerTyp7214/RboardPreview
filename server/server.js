@@ -95,7 +95,7 @@ const run = async () => {
             console.log('Shutting down.')
             res.send('Shutting down.')
             process.exit()
-        } else res.status(401)
+        } else res.sendStatus(401)
     })
 
     app.get('/status', (req, res) => {
