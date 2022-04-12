@@ -28,4 +28,7 @@ const run = async () => {
     }).then(() => console.log('Updated.')).catch(() => console.log('Error.'))
 }
 
-run().then(() => console.log('Done.'))
+run().then(() => {
+    console.log('Done.')
+    process.exit()
+})
