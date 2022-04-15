@@ -28,7 +28,6 @@
     "react-color-palette": "^6.2.0",
     "react-device-detect": "^2.1.2",
     "react-dom": "^18.0.0",
-    "react-gtm-module": "^2.0.11",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
     "typescript": "^4.6.3",

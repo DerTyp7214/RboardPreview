@@ -44,6 +44,24 @@ const parseHtml = (html, req) => {
         .replace(new RegExp('{{DESCRIPTION}}', 'g'), `${themeName ?? 'Theme'} by ${author ?? 'DerTyp7214'}`)
 }
 
+const analytics = async (req) => {
+    const {
+        mainBg,
+        keyBg,
+        keyColor,
+        secondKeyBg,
+        accentBg,
+        themeName,
+        author
+    } = req.query
+
+    const csvString = `${Date.now()}|${req.get('User-Agent')}|${JSON.stringify({
+        mainBg, keyBg, keyColor, secondKeyBg, accentBg, themeName, author
+    })}\n`
+
+    fs.appendFileSync(path.join(serverPath, 'stats.csv'), csvString)
+}
+
 const run = async () => {
     const browser = await puppeteer.launch()
 
@@ -61,6 +79,8 @@ const run = async () => {
     for (const p of paths) app.use(`/${p}`, express.static(path.join(buildPath, p)))
 
     app.get('/preview', async (req, res) => {
+        analytics(req)
+
         const page = await browser.newPage()
         await page.setContent(fs.readFileSync(path.join(serverPath, 'keyboard.html'), 'utf8'), {waitUntil: 'networkidle0'})
         await page.on('console', async (msg) => {
@@ -102,8 +122,21 @@ const run = async () => {
         res.json({status: 'ok', alive: true})
     })
 
+    app.get('/stats', async (req, res) => {
+        const csv = []
+
+        const csvString = fs.readFileSync(path.join(serverPath, 'stats.csv'), 'utf-8')
+
+        for (const line of csvString.split('\n'))
+            if (line.trim().length > 0) csv.push(line.split('|'))
+
+        res.json(csv)
+    })
+
     app.get('/', (req, res) => {
         if (fs.existsSync(path.join(buildPath, 'index.html'))) {
+            analytics(req)
+
             const html = fs.readFileSync(path.join(buildPath, 'index.html'), 'utf-8')
 
             res.setHeader('content-type', 'text/html')

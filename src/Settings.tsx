@@ -55,11 +55,11 @@ class Settings extends Component<SettingsProps> {
             } = props.preset
             this.state.name = themeName ? decodeURIComponent(themeName) : themeName
             this.state.author = themeName ? decodeURIComponent(author) : themeName
-            this.root.style.setProperty('--main-bg', mainBg)
-            this.root.style.setProperty('--key-bg', keyBg)
-            this.root.style.setProperty('--key-color', keyColor)
-            this.root.style.setProperty('--second-key-bg', secondKeyBg)
-            this.root.style.setProperty('--accent-bg', accentBg)
+            if (mainBg) this.root.style.setProperty('--main-bg', mainBg)
+            if (keyBg) this.root.style.setProperty('--key-bg', keyBg)
+            if (keyColor) this.root.style.setProperty('--key-color', keyColor)
+            if (secondKeyBg) this.root.style.setProperty('--second-key-bg', secondKeyBg)
+            if (accentBg) this.root.style.setProperty('--accent-bg', accentBg)
         }
     }
 
