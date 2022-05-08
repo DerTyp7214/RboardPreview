@@ -72,6 +72,22 @@ function App() {
         input.click()
     }
 
+    const uglify = () => {
+        const randomColor = () => (Math.random() * 0xFFFFFF << 0).toString(16)
+
+        const mainBg = randomColor()
+        const keyBg = randomColor()
+        const keyColor = randomColor()
+        const secondKeyBg = randomColor()
+        const accentBg = randomColor()
+
+        setColors({
+            themeName: `Ugly #${Math.random() * 100 << 0}`,
+            author: 'DerTyp7214',
+            mainBg, keyBg, keyColor, secondKeyBg, accentBg
+        })
+    }
+
     return (
         <ThemeProvider theme={createTheme({ palette: { mode: 'dark', primary: { main: '#FFFFFF' } } })}>
             <div style={{ padding: 32 }}>
@@ -91,9 +107,7 @@ function App() {
                     <Grid item>
                         <Settings
                             exportTheme={exportTheme}
-                            shuffle={() => {
-                                window.location.href = '/ugly'
-                            }}
+                            uglify={uglify}
                             uploadPic={uploadPic}
                             ref={settingsRef}
                             preset={colors}/>

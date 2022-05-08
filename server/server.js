@@ -136,20 +136,6 @@ const run = async () => {
         res.json(csv)
     })
 
-    app.get('/ugly', (req, res) => {
-        const baseUrl = process.env.PUBLIC_URL ?? `${req.protocol}://${req.headers.host}`
-
-        const randomColor = () => (Math.random()*0xFFFFFF<<0).toString(16)
-
-        const mainBg = randomColor()
-        const keyBg = randomColor()
-        const keyColor = randomColor()
-        const secondKeyBg = randomColor()
-        const accentBg = randomColor()
-
-        res.redirect(buildUrl(baseUrl, {mainBg, keyBg, keyColor, secondKeyBg, accentBg}))
-    })
-
     app.get('/', (req, res) => {
         if (fs.existsSync(path.join(buildPath, 'index.html'))) {
             analytics(req)

@@ -21,7 +21,7 @@ export interface Preset {
 export interface SettingsProps {
     ref?: RefObject<Settings>
     exportTheme?: () => any;
-    shuffle?: () => any;
+    uglify?: () => any;
     uploadPic?: () => any;
     getThemeName?: () => string;
     getAuthorName?: () => string;
@@ -300,7 +300,7 @@ class Settings extends Component<SettingsProps> {
                     fullWidth
                     variant='outlined'
                     color='primary'
-                    onClick={this.props.shuffle}
+                    onClick={this.props.uglify}
                     sx={{
                         margin: '8px',
                         borderWidth: '.08em',
