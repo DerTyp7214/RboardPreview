@@ -106,7 +106,11 @@ class Settings extends Component<SettingsProps> {
     componentDidUpdate(prevProps: Readonly<SettingsProps>) {
         if (prevProps !== this.props) {
             this.parsePreset(this.props)
-            this.setState(this.state)
+            this.setState({
+                ...this.state,
+                author: this.props.preset?.author,
+                themeName: this.props.preset?.themeName
+            })
         }
     }
 
