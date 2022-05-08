@@ -1,10 +1,6 @@
 import { Component, createRef, RefObject } from 'react';
-import { colorVars, metadata, styleSheetMd, styleSheetMdBorder } from './variables';
-import { cropCanvas, shadeColor } from './utils';
-import html2canvas from 'html2canvas';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-import { Box } from "@mui/material";
+import { colorVars } from './variables';
+import { Box } from '@mui/material';
 
 export interface KeyboardProps {
     ref?: RefObject<Keyboard>;
@@ -31,51 +27,19 @@ class Keyboard extends Component<KeyboardProps> {
         const colors: { [key: string]: any } = {}
         colorVars.forEach(cssVar => colors[cssVar] = rootStyles.getPropertyValue(cssVar).trim())
 
-        colors['--accent-bg-pressed'] = shadeColor(colors['--accent-bg'], 5)
-        colors['--second-key-bg-pressed'] = shadeColor(colors['--second-key-bg'], 5)
+        const buildUrl = () => {
+            let url = `${window.location.origin}/get`
+            url += `?mainBg=${colors['--main-bg']}`
+            url += `&keyBg=${colors['--key-bg']}`
+            url += `&keyColor=${colors['--key-color']}`
+            url += `&secondKeyBg=${colors['--second-key-bg']}`
+            url += `&accentBg=${colors['--accent-bg']}`
+            url += `&themeName=${encodeURIComponent(name)}`
+            url += `&author=${encodeURIComponent(author)}`
+            return url
+        }
 
-        const keyboardRef = this.keyboardBody.current
-        if (!keyboardRef) return
-
-        let themeName = name.trim()
-        if (!themeName?.length) themeName = metadata.id
-        const escapedThemeName = themeName.replace(new RegExp(' ', 'g'), '_')
-
-        let authorName = author.trim()
-        if (!authorName?.length) authorName = 'DerTyp7214'
-
-        this.setState({ savingPicture: true })
-        await new Promise(res => setTimeout(res, 10))
-        const canvas = await html2canvas(keyboardRef)
-        const png = cropCanvas(canvas, 0, 0, canvas.width - 1, canvas.height - 1)
-            .toDataURL('image/png').replace('data:image/png;base64,', '')
-        this.setState({ savingPicture: false })
-
-        const themeZip = new JSZip()
-
-        const variables = [
-            `@def web_color_bg ${colors['--main-bg']};`,
-            `@def web_color_label ${colors['--key-color']};`,
-            `@def web_color_accent ${colors['--accent-bg']};`,
-            `@def web_color_accent_pressed ${colors['--accent-bg-pressed']};`,
-            `@def web_color_key_bg ${colors['--key-bg']};`,
-            `@def web_color_key_bg_pressed ${colors['--second-key-bg']};`,
-            `@def web_color_secondary_key_bg ${colors['--second-key-bg']};`,
-            `@def web_color_secondary_key_bg_pressed ${colors['--second-key-bg-pressed']};`
-        ]
-
-        themeZip.file('metadata.json', JSON.stringify(metadata, null, 2))
-        themeZip.file('style_sheet_md2.css', styleSheetMd)
-        themeZip.file('style_sheet_md2_border.css', styleSheetMdBorder)
-        themeZip.file('variables.css', variables.join('\n'))
-
-        const packZip = new JSZip()
-
-        packZip.file('pack.meta', `name=${themeName}\nauthor=${authorName}`)
-        packZip.file(`${escapedThemeName}.zip`, await themeZip.generateAsync({ type: 'base64' }), { base64: true })
-        packZip.file(escapedThemeName, png, { base64: true })
-
-        saveAs(await packZip.generateAsync({ type: 'blob' }), `${themeName}.pack`)
+        window.open(buildUrl(), '_blank')
     }
 
     render() {
