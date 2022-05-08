@@ -49,7 +49,7 @@ function App() {
                 reader.onload = async e => {
                     const base64 = e.target?.result?.toString()
                     if (base64) {
-                        const randomColor = () => (Math.random() * 0xFFFFFF << 0).toString(16)
+                        const randomColor = () => `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
 
                         const palette = await Vibrant.from(base64).getPalette()
 
@@ -73,7 +73,7 @@ function App() {
     }
 
     const uglify = () => {
-        const randomColor = () => (Math.random() * 0xFFFFFF << 0).toString(16)
+        const randomColor = () => `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
 
         const mainBg = randomColor()
         const keyBg = randomColor()
