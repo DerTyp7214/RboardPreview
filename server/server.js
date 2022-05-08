@@ -164,7 +164,7 @@ const run = async () => {
 
     app.get('/get', async (req, res) => {
 
-        let {
+        const {
             mainBg,
             keyBg,
             keyColor,
@@ -172,12 +172,9 @@ const run = async () => {
             accentBg,
             themeName,
             author
-        } = req.query
+        } = Object.assign({themeName: metadata.id, author: 'DerTyp7214'}, req.query)
 
-        if (!themeName?.length) themeName = metadata.id
         const escapedThemeName = themeName.replace(new RegExp(' ', 'g'), '_')
-
-        if (!author?.length) author = 'DerTyp7214'
 
         const png = await generatePreview(browser, req.query, {
             type: 'png',
