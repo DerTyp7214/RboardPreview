@@ -12,8 +12,8 @@ const serverPath = 'server'
 
 const secretKey = process.env.SECRET_KEY
 
-const parseHtml = (html, req) => {
-    const baseUrl = process.env.PUBLIC_URL ?? `${req.protocol}://${req.headers.host}`
+const buildUrl = (baseUrl, query) => {
+    let url = baseUrl
 
     const {
         mainBg,
@@ -21,26 +21,29 @@ const parseHtml = (html, req) => {
         keyColor,
         secondKeyBg,
         accentBg,
+    } = query
+
+    if (!mainBg || !keyBg || !keyColor || !secondKeyBg || !accentBg) return url
+
+    url += `?mainBg=${mainBg}`
+    url += `&keyBg=${keyBg}`
+    url += `&keyColor=${keyColor}`
+    url += `&secondKeyBg=${secondKeyBg}`
+    url += `&accentBg=${accentBg}`
+    return url
+}
+
+const parseHtml = (html, req) => {
+    const baseUrl = process.env.PUBLIC_URL ?? `${req.protocol}://${req.headers.host}`
+
+    const {
         themeName,
         author
     } = req.query
 
-    const buildUrl = (baseUrl) => {
-        let url = baseUrl
-
-        if (!mainBg || !keyBg || !keyColor || !secondKeyBg || !accentBg) return url
-
-        url += `?mainBg=${mainBg}`
-        url += `&keyBg=${keyBg}`
-        url += `&keyColor=${keyColor}`
-        url += `&secondKeyBg=${secondKeyBg}`
-        url += `&accentBg=${accentBg}`
-        return url
-    }
-
     return html
         .replace(new RegExp('{{PUBLIC_URL}}', 'g'), baseUrl)
-        .replace(new RegExp('{{IMAGE}}', 'g'), buildUrl(`${baseUrl}/preview`))
+        .replace(new RegExp('{{IMAGE}}', 'g'), buildUrl(`${baseUrl}/preview`, req.query))
         .replace(new RegExp('{{DESCRIPTION}}', 'g'), `${themeName ?? 'Theme'} by ${author ?? 'DerTyp7214'}`)
 }
 
@@ -131,6 +134,20 @@ const run = async () => {
             if (line.trim().length > 0) csv.push(line.split('|'))
 
         res.json(csv)
+    })
+
+    app.get('/ugly', (req, res) => {
+        const baseUrl = process.env.PUBLIC_URL ?? `${req.protocol}://${req.headers.host}`
+
+        const randomColor = () => (Math.random()*0xFFFFFF<<0).toString(16)
+
+        const mainBg = randomColor()
+        const keyBg = randomColor()
+        const keyColor = randomColor()
+        const secondKeyBg = randomColor()
+        const accentBg = randomColor()
+
+        res.redirect(buildUrl(baseUrl, {mainBg, keyBg, keyColor, secondKeyBg, accentBg}))
     })
 
     app.get('/', (req, res) => {

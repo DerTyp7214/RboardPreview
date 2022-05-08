@@ -1,22 +1,15 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import Keyboard from './Keyboard'
-import Settings from './Settings'
+import Settings, { Preset } from './Settings'
 import { createTheme, Grid, ThemeProvider, Typography } from '@mui/material'
 import { MobileView } from 'react-device-detect'
+import Vibrant from 'node-vibrant/dist/vibrant'
 
 function App() {
     const keyboardRef = useRef<Keyboard>(null)
     const settingsRef = useRef<Settings>(null)
 
-    const exportTheme = async () => {
-        if (settingsRef.current && keyboardRef.current)
-            await keyboardRef.current.exportTheme(
-                settingsRef.current.getThemeName(),
-                settingsRef.current.getAuthorName()
-            )
-    }
-
-    const getPreset = () => {
+    const getPreset: () => (Preset | undefined) = () => {
         const search = window.location.search
         if (search.length < 1) return
         const query: { [key: string]: string } = {}
@@ -33,6 +26,50 @@ function App() {
                 author: query['author']
             }
         }
+    }
+
+    const [colors, setColors] = useState<Preset | undefined>(getPreset())
+
+    const exportTheme = async () => {
+        if (settingsRef.current && keyboardRef.current)
+            await keyboardRef.current.exportTheme(
+                settingsRef.current.getThemeName(),
+                settingsRef.current.getAuthorName()
+            )
+    }
+
+    const uploadPic = async () => {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'image/png, image/jpeg'
+        input.onchange = () => {
+            const file = input.files?.[0]
+            if (file) {
+                const reader = new FileReader()
+                reader.onload = async e => {
+                    const base64 = e.target?.result?.toString()
+                    if (base64) {
+                        const randomColor = () => (Math.random() * 0xFFFFFF << 0).toString(16)
+
+                        const palette = await Vibrant.from(base64).getPalette()
+
+                        const mainBg = palette.DarkMuted?.hex ?? randomColor()
+                        const keyBg = palette.Muted?.hex ?? randomColor()
+                        const keyColor = palette.LightVibrant?.hex ?? randomColor()
+                        const secondKeyBg = palette.Muted?.hex ?? randomColor()
+                        const accentBg = palette.Vibrant?.hex ?? randomColor()
+
+                        setColors({
+                            themeName: file.name,
+                            author: 'DerTyp7214',
+                            mainBg, keyBg, keyColor, secondKeyBg, accentBg
+                        })
+                    }
+                }
+                reader.readAsDataURL(file)
+            }
+        }
+        input.click()
     }
 
     return (
@@ -54,8 +91,12 @@ function App() {
                     <Grid item>
                         <Settings
                             exportTheme={exportTheme}
+                            shuffle={() => {
+                                window.location.href = '/ugly'
+                            }}
+                            uploadPic={uploadPic}
                             ref={settingsRef}
-                            preset={getPreset()}/>
+                            preset={colors}/>
                         <MobileView>
                             <Typography variant='h2' sx={{
                                 fontSize: 'var(--font-size)',

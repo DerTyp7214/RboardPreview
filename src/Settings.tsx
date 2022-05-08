@@ -8,20 +8,24 @@ import { isMobile } from 'react-device-detect'
 import { Share } from "@mui/icons-material";
 import { copyToClipboard } from "./utils";
 
+export interface Preset {
+    mainBg: string;
+    keyBg: string;
+    keyColor: string;
+    secondKeyBg: string;
+    accentBg: string;
+    themeName: string;
+    author: string;
+}
+
 export interface SettingsProps {
     ref?: RefObject<Settings>
     exportTheme?: () => any;
+    shuffle?: () => any;
+    uploadPic?: () => any;
     getThemeName?: () => string;
     getAuthorName?: () => string;
-    preset?: {
-        mainBg: string;
-        keyBg: string;
-        keyColor: string;
-        secondKeyBg: string;
-        accentBg: string;
-        themeName: string;
-        author: string;
-    }
+    preset?: Preset
 }
 
 class Settings extends Component<SettingsProps> {
@@ -43,6 +47,18 @@ class Settings extends Component<SettingsProps> {
         this.root = document.documentElement
         this.rootStyles = getComputedStyle(this.root)
 
+        this.parsePreset(props)
+    }
+
+    getThemeName() {
+        return this.state.name
+    }
+
+    getAuthorName() {
+        return this.state.author
+    }
+
+    private parsePreset(props: SettingsProps) {
         if (props.preset) {
             const {
                 mainBg,
@@ -61,14 +77,6 @@ class Settings extends Component<SettingsProps> {
             if (secondKeyBg) this.root.style.setProperty('--second-key-bg', secondKeyBg)
             if (accentBg) this.root.style.setProperty('--accent-bg', accentBg)
         }
-    }
-
-    getThemeName() {
-        return this.state.name
-    }
-
-    getAuthorName() {
-        return this.state.author
     }
 
     private refreshColors(custom: (cssVar: string, element: HTMLInputElement, cssValue: any) => any) {
@@ -93,6 +101,13 @@ class Settings extends Component<SettingsProps> {
                 this.root.style.setProperty(cssVar, (ev as ChangeEvent<HTMLInputElement>).target.value)
             })
         })
+    }
+
+    componentDidUpdate(prevProps: Readonly<SettingsProps>) {
+        if (prevProps !== this.props) {
+            this.parsePreset(this.props)
+            this.setState(this.state)
+        }
     }
 
     render() {
@@ -266,6 +281,40 @@ class Settings extends Component<SettingsProps> {
                         borderRadius: '.5em'
                     }}>
                     <Share/>
+                </Button>
+            </div>
+
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: `calc(18em * ${isMobile ? '1.15' : '.78'})`,
+                paddingTop: '.8em',
+                margin: 'auto',
+                transform: isMobile ? 'scale(.9)' : 'scale(1.3)'
+            }}>
+                <Button
+                    fullWidth
+                    variant='outlined'
+                    color='primary'
+                    onClick={this.props.shuffle}
+                    sx={{
+                        margin: '8px',
+                        borderWidth: '.08em',
+                        borderRadius: '.5em'
+                    }}>
+                    Uglify
+                </Button>
+                <Button
+                    fullWidth
+                    variant='outlined'
+                    color='primary'
+                    onClick={this.props.uploadPic}
+                    sx={{
+                        margin: '8px',
+                        borderWidth: '.08em',
+                        borderRadius: '.5em'
+                    }}>
+                    Choose Picture
                 </Button>
             </div>
             <Snackbar
