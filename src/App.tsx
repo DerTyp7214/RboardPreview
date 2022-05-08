@@ -60,7 +60,7 @@ function App() {
                         const accentBg = palette.Vibrant?.hex ?? randomColor()
 
                         setColors({
-                            themeName: file.name,
+                            themeName: file.name.split('.').slice(0, -1).join('.'),
                             author: 'DerTyp7214',
                             mainBg, keyBg, keyColor, secondKeyBg, accentBg
                         })
@@ -82,7 +82,7 @@ function App() {
         const accentBg = randomColor()
 
         setColors({
-            themeName: `Ugly #${Math.random() * 100 << 0}`,
+            themeName: `Ugly #${Math.random() * 187 << 0}`,
             author: 'DerTyp7214',
             mainBg, keyBg, keyColor, secondKeyBg, accentBg
         })

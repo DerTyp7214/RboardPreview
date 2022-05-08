@@ -109,7 +109,7 @@ class Settings extends Component<SettingsProps> {
             this.setState({
                 ...this.state,
                 author: this.props.preset?.author,
-                themeName: this.props.preset?.themeName
+                name: this.props.preset?.themeName
             })
         }
     }
@@ -159,6 +159,41 @@ class Settings extends Component<SettingsProps> {
             }}/>
         )
 
+        const share = () => {
+            const buildUrl = () => {
+                let url = window.location.origin
+                url += `?mainBg=${this.getAttrColor('--main-bg').substring(1)}`
+                url += `&keyBg=${this.getAttrColor('--key-bg').substring(1)}`
+                url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
+                url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
+                url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
+                url += `&themeName=${encodeURIComponent(this.state.name)}`
+                url += `&author=${encodeURIComponent(this.state.author)}`
+                return url
+            }
+            if (navigator.share) navigator.share({
+                url: buildUrl()
+            }).then(() => {
+            }).catch(() => {
+                this.setState({
+                    ...this.state,
+                    snackbar: {
+                        open: true,
+                        text: 'Error while sharing url!'
+                    }
+                })
+            })
+            else copyToClipboard(buildUrl()).then(() => {
+                this.setState({
+                    ...this.state,
+                    snackbar: {
+                        open: true,
+                        text: 'Copied to Clipboard!'
+                    }
+                })
+            })
+        }
+
         return <div className='settings' style={{
             position: 'relative'
         }}>
@@ -191,6 +226,7 @@ class Settings extends Component<SettingsProps> {
                             borderRadius: '.5em'
                         }
                     }}
+                    value={this.state.author}
                     defaultValue={this.state.author}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({ ...this.state, author: event.target.value })
@@ -216,6 +252,7 @@ class Settings extends Component<SettingsProps> {
                             borderRadius: '.5em'
                         }
                     }}
+                    value={this.state.name}
                     defaultValue={this.state.name}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({ ...this.state, name: event.target.value })
@@ -245,40 +282,7 @@ class Settings extends Component<SettingsProps> {
                     fullWidth
                     variant='outlined'
                     color='primary'
-                    onClick={() => {
-                        const buildUrl = () => {
-                            let url = window.location.origin
-                            url += `?mainBg=${this.getAttrColor('--main-bg').substring(1)}`
-                            url += `&keyBg=${this.getAttrColor('--key-bg').substring(1)}`
-                            url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
-                            url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
-                            url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
-                            url += `&themeName=${encodeURIComponent(this.state.name)}`
-                            url += `&author=${encodeURIComponent(this.state.author)}`
-                            return url
-                        }
-                        if (navigator.share) navigator.share({
-                            url: buildUrl()
-                        }).then(() => {
-                        }).catch(() => {
-                            this.setState({
-                                ...this.state,
-                                snackbar: {
-                                    open: true,
-                                    text: 'Error while sharing url!'
-                                }
-                            })
-                        })
-                        else copyToClipboard(buildUrl()).then(() => {
-                            this.setState({
-                                ...this.state,
-                                snackbar: {
-                                    open: true,
-                                    text: 'Copied to Clipboard!'
-                                }
-                            })
-                        })
-                    }}
+                    onClick={share}
                     sx={{
                         margin: '8px',
                         borderWidth: '.08em',
