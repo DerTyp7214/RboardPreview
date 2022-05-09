@@ -38,6 +38,10 @@ function App() {
                 settingsRef.current.getAuthorName()
             )
     }
+    const randomColor: () => string = () => {
+        const color = `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
+        return color.length === 7 ? color : randomColor()
+    }
 
     const uploadPic = async () => {
         const input = document.createElement('input')
@@ -50,8 +54,6 @@ function App() {
                 reader.onload = async e => {
                     const base64 = e.target?.result?.toString()
                     if (base64) {
-                        const randomColor = () => `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
-
                         const palette = await Vibrant.from(base64).getPalette()
 
                         const mainBg = palette.DarkMuted?.hex ?? randomColor()
@@ -75,11 +77,6 @@ function App() {
     }
 
     const uglify = () => {
-        const randomColor: () => string = () => {
-            const color = `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
-            return color.length === 7 ? color : randomColor()
-        }
-
         const mainBg = randomColor()
         const keyBg = randomColor()
         const keyColor = randomColor()
