@@ -72,7 +72,7 @@ const parseHtml = (html, req) => {
 
 const generatePreview = async (browser, query, options) => {
     const page = await browser.newPage()
-    await page.setContent(fs.readFileSync(path.join(serverPath, 'keyboard.html'), 'utf8'), {waitUntil: 'networkidle0'})
+    await page.setContent(fs.readFileSync(path.join(serverPath, 'keyboards', `${query.preset ?? 'default'}.html`), 'utf8'), {waitUntil: 'networkidle0'})
     await page.on('console', async (msg) => {
         const msgArgs = msg.args()
         for (const arg of msgArgs) console.log(await arg.jsonValue())
@@ -172,8 +172,9 @@ const run = async () => {
             secondKeyBg,
             accentBg,
             themeName,
-            author
-        } = Object.assign({themeName: metadata.id, author: 'DerTyp7214'}, req.query)
+            author,
+            preset
+        } = Object.assign({themeName: metadata.id, author: 'DerTyp7214', preset: 'default'}, req.query)
 
         const escapedThemeName = themeName.replace(new RegExp(' ', 'g'), '_')
 
@@ -196,8 +197,8 @@ const run = async () => {
         ]
 
         themeZip.file('metadata.json', JSON.stringify(metadata, null, 2))
-        themeZip.file('style_sheet_md2.css', styleSheetMd)
-        themeZip.file('style_sheet_md2_border.css', styleSheetMdBorder)
+        themeZip.file('style_sheet_md2.css', styleSheetMd[preset])
+        themeZip.file('style_sheet_md2_border.css', styleSheetMdBorder[preset])
         themeZip.file('variables.css', variables.join('\n'))
 
         const packZip = new JSZip()

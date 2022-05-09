@@ -33,10 +33,39 @@ body {
     font-size: var(--font-size);
 }
 
-.keyboard_body {
+.scrollContainer {
     font-size: var(--font-size);
+
+    scroll-snap-type: x mandatory;
+
+    width: 100vw;
+    max-width: 25em;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+}
+
+.scrollContainer::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.keyboard_wrapper:first-child {
+    margin-left: calc(100vw - 18em + .33em);
+}
+
+.keyboard_wrapper:last-child {
+    margin-right: calc(100vw - 18em + .33em);
+}
+
+.keyboard_wrapper {
+    scroll-snap-align: center;
+}
+
+.keyboard_body {
     background-color: var(--main-bg);
 
+    margin: .33em;
     width: 18em;
     height: 12em;
 }

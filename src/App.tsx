@@ -23,7 +23,8 @@ function App() {
                 secondKeyBg: `#${query['secondKeyBg']}`,
                 accentBg: `#${query['accentBg']}`,
                 themeName: query['themeName'],
-                author: query['author']
+                author: query['author'],
+                preset: query['preset'] ?? 'default'
             }
         }
     }
@@ -58,11 +59,12 @@ function App() {
                         const keyColor = palette.LightVibrant?.hex ?? randomColor()
                         const secondKeyBg = palette.Muted?.hex ?? randomColor()
                         const accentBg = palette.Vibrant?.hex ?? randomColor()
+                        const preset = 'default'
 
                         setColors({
                             themeName: file.name.split('.').slice(0, -1).join('.'),
                             author: 'DerTyp7214',
-                            mainBg, keyBg, keyColor, secondKeyBg, accentBg
+                            mainBg, keyBg, keyColor, secondKeyBg, accentBg, preset
                         })
                     }
                 }
@@ -80,11 +82,12 @@ function App() {
         const keyColor = randomColor()
         const secondKeyBg = randomColor()
         const accentBg = randomColor()
+        const preset = 'default'
 
         setColors({
             themeName: `Ugly #${Math.random() * 187 << 0}`,
             author: 'DerTyp7214',
-            mainBg, keyBg, keyColor, secondKeyBg, accentBg
+            mainBg, keyBg, keyColor, secondKeyBg, accentBg, preset
         })
     }
 
@@ -102,11 +105,12 @@ function App() {
                         transform: 'translateY(-50%)'
                     }}>
                     <Grid item>
-                        <Keyboard ref={keyboardRef}/>
+                        <Keyboard ref={keyboardRef} preset={colors?.preset as any}/>
                     </Grid>
                     <Grid item>
                         <Settings
                             exportTheme={exportTheme}
+                            passPreset={() => keyboardRef.current?.getPreset()}
                             uglify={uglify}
                             uploadPic={uploadPic}
                             ref={settingsRef}

@@ -5,8 +5,9 @@ import ClickAwayListener from 'react-click-away-listener'
 import 'react-color-palette/lib/css/styles.css'
 import { Button, Snackbar, TextField } from '@mui/material'
 import { isMobile } from 'react-device-detect'
-import { Share } from "@mui/icons-material";
-import { copyToClipboard } from "./utils";
+import { Share } from '@mui/icons-material';
+import { copyToClipboard } from './utils';
+import { Preset as KPreset } from './Icons'
 
 export interface Preset {
     mainBg: string;
@@ -16,6 +17,7 @@ export interface Preset {
     accentBg: string;
     themeName: string;
     author: string;
+    preset: string
 }
 
 export interface SettingsProps {
@@ -25,6 +27,7 @@ export interface SettingsProps {
     uploadPic?: () => any;
     getThemeName?: () => string;
     getAuthorName?: () => string;
+    passPreset?: () => KPreset | undefined;
     preset?: Preset
 }
 
@@ -36,6 +39,7 @@ class Settings extends Component<SettingsProps> {
     state = {
         name: '',
         author: 'DerTyp7214',
+        preset: 'default',
         snackbar: {
             open: false,
             text: ''
@@ -67,10 +71,12 @@ class Settings extends Component<SettingsProps> {
                 secondKeyBg,
                 accentBg,
                 themeName,
-                author
+                author,
+                preset
             } = props.preset
             this.state.name = themeName ? decodeURIComponent(themeName) : themeName
-            this.state.author = themeName ? decodeURIComponent(author) : themeName
+            this.state.author = author ? decodeURIComponent(author) : author
+            this.state.preset = preset ?? 'default'
             if (mainBg) this.root.style.setProperty('--main-bg', mainBg)
             if (keyBg) this.root.style.setProperty('--key-bg', keyBg)
             if (keyColor) this.root.style.setProperty('--key-color', keyColor)
@@ -169,6 +175,7 @@ class Settings extends Component<SettingsProps> {
                 url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
                 url += `&themeName=${encodeURIComponent(this.state.name)}`
                 url += `&author=${encodeURIComponent(this.state.author)}`
+                url += `&preset=${this.props.passPreset?.()}`
                 return url
             }
             if (navigator.share) navigator.share({
