@@ -29,11 +29,11 @@ class Keyboard extends Component<KeyboardProps> {
 
         const buildUrl = () => {
             let url = `${window.location.origin}/get`
-            url += `?mainBg=${colors['--main-bg']}`
-            url += `&keyBg=${colors['--key-bg']}`
-            url += `&keyColor=${colors['--key-color']}`
-            url += `&secondKeyBg=${colors['--second-key-bg']}`
-            url += `&accentBg=${colors['--accent-bg']}`
+            url += `?mainBg=${colors['--main-bg'].replace('#', '')}`
+            url += `&keyBg=${colors['--key-bg'].replace('#', '')}`
+            url += `&keyColor=${colors['--key-color'].replace('#', '')}`
+            url += `&secondKeyBg=${colors['--second-key-bg'].replace('#', '')}`
+            url += `&accentBg=${colors['--accent-bg'].replace('#', '')}`
             url += `&themeName=${encodeURIComponent(name)}`
             url += `&author=${encodeURIComponent(author)}`
             return url

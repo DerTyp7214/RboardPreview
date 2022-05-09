@@ -201,7 +201,15 @@ const run = async () => {
 
         const packZip = new JSZip()
 
-        packZip.file('pack.meta', `name=${themeName}\nauthor=${author}`)
+        const colors = [
+            ntc.name(`#${mainBg}`)[0],
+            ntc.name(`#${keyColor}`)[0],
+            ntc.name(`#${accentBg}`)[0],
+            ntc.name(`#${keyBg}`)[0],
+            ntc.name(`#${secondKeyBg}`)[0]
+        ].filter(color => color != null)
+
+        packZip.file('pack.meta', `name=${themeName}\nauthor=${author}${colors.length ? `\ntags=${colors.join(',')}` : ''}`)
         packZip.file(`${escapedThemeName}.zip`, await themeZip.generateAsync({type: 'base64'}), {base64: true})
         packZip.file(escapedThemeName, png, {base64: true})
 
