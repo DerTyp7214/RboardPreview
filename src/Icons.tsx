@@ -4,6 +4,37 @@ import { presets } from './variables';
 export type Icon = 'shift' | 'backspace' | 'return' | 'topAction'
 export type Preset = (typeof presets)[number]
 
+export const getClassName: (icon: Icon, preset: Preset) => string = (icon: Icon, preset: Preset) => {
+    switch (icon) {
+        case 'topAction':
+            switch (preset) {
+                case 'regularAlt':
+                    return 'second_color'
+                default:
+                    return 'accent_color'
+            }
+        case 'return':
+            switch (preset) {
+                case 'regularAlt':
+                    return 'second_color'
+                default:
+                    return 'accent_color'
+            }
+        case 'shift':
+            switch (preset) {
+                default:
+                    return 'second_color'
+            }
+        case 'backspace':
+            switch (preset) {
+                default:
+                    return 'second_color'
+            }
+        default:
+            return ''
+    }
+}
+
 export const getIcon: (icon: Icon, preset?: Preset) => ReactElement = (icon: Icon, preset: Preset = 'default') => {
     let additionalStyle = {}
     switch (preset) {

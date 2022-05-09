@@ -1,7 +1,7 @@
 import { Component, createRef, RefObject } from 'react';
 import { colorVars } from './variables';
 import { Box } from '@mui/material';
-import { getIcon, Preset } from './Icons';
+import { getClassName, getIcon, Preset } from './Icons';
 
 export interface KeyboardProps {
     ref?: RefObject<Keyboard>;
@@ -97,7 +97,7 @@ class Keyboard extends Component<KeyboardProps> {
                         <div className='top_bar'>
                             <div className='top_bar_key'>
                                 <div
-                                    className='top_bar_element accent_color top_action'>{getIcon('topAction', props.preset)}</div>
+                                    className={`${getClassName('topAction', props.preset)} top_bar_element top_action`}>{getIcon('topAction', props.preset)}</div>
                             </div>
                             <div className='rec-bar'>
                                 <span className='rec-text'>Rboard</span>
@@ -157,7 +157,7 @@ class Keyboard extends Component<KeyboardProps> {
                             <div className='simple_key'><span className='letter'>l</span></div>
                         </div>
                         <div className='keys'>
-                            <div className='second_color custom_key simple_key'>
+                            <div className={`${getClassName('shift', props.preset)} custom_key simple_key`}>
                                 <div className='shift'>{getIcon('shift', props.preset)}</div>
                             </div>
                             <div className='simple_key'><span className='letter'>y</span></div>
@@ -167,7 +167,7 @@ class Keyboard extends Component<KeyboardProps> {
                             <div className='simple_key'><span className='letter'>b</span></div>
                             <div className='simple_key'><span className='letter'>n</span></div>
                             <div className='simple_key'><span className='letter'>m</span></div>
-                            <div className='second_color custom_key simple_key'>
+                            <div className={`${getClassName('backspace', props.preset)} custom_key simple_key`}>
                                 <div className='backspace'>{getIcon('backspace', props.preset)}</div>
                             </div>
                         </div>
@@ -196,7 +196,8 @@ class Keyboard extends Component<KeyboardProps> {
                             </div>
                             <div className='space simple_key'><span className='letter lspace'>Rboard</span></div>
                             <div className='second_color simple_key'><span className='letter'>.</span></div>
-                            <div className='accent_color custom_key simple_key'>
+                            <div
+                                className={`${getClassName('return', props.preset)} custom_key simple_key`}>
                                 <div className='return'>{getIcon('return', props.preset)}</div>
                             </div>
                         </div>
