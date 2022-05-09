@@ -84,8 +84,18 @@ function App() {
         const accentBg = randomColor()
         const preset = 'default'
 
+        const generateName = () => {
+            let number = 0
+            number += parseInt(mainBg.substring(1), 16)
+            number += parseInt(keyBg.substring(1), 16)
+            number += parseInt(keyColor.substring(1), 16)
+            number += parseInt(secondKeyBg.substring(1), 16)
+            number += parseInt(accentBg.substring(1), 16)
+            return `Ugly #${Math.floor(number / (255 * 5))}`
+        }
+
         setColors({
-            themeName: `Ugly #${Math.random() * 187 << 0}`,
+            themeName: generateName(),
             author: 'DerTyp7214',
             mainBg, keyBg, keyColor, secondKeyBg, accentBg, preset
         })
