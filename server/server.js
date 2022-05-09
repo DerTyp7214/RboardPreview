@@ -203,11 +203,11 @@ const run = async () => {
         const packZip = new JSZip()
 
         const colors = [
-            ntc.name(`#${mainBg}`)[0],
-            ntc.name(`#${keyColor}`)[0],
-            ntc.name(`#${accentBg}`)[0],
-            ntc.name(`#${keyBg}`)[0],
-            ntc.name(`#${secondKeyBg}`)[0]
+            ntc.name(`#${mainBg}`)[1],
+            ntc.name(`#${keyColor}`)[1],
+            ntc.name(`#${accentBg}`)[1],
+            ntc.name(`#${keyBg}`)[1],
+            ntc.name(`#${secondKeyBg}`)[1]
         ].filter(color => color != null)
 
         packZip.file('pack.meta', `name=${themeName}\nauthor=${author}${colors.length ? `\ntags=${colors.join(',')}` : ''}`)
