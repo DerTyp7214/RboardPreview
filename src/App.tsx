@@ -75,7 +75,10 @@ function App() {
     }
 
     const uglify = () => {
-        const randomColor = () => `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
+        const randomColor: () => string = () => {
+            const color = `#${(Math.random() * 0xFFFFFF << 0).toString(16)}`
+            return color.length === 7 ? color : randomColor()
+        }
 
         const mainBg = randomColor()
         const keyBg = randomColor()

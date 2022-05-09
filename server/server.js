@@ -5,7 +5,7 @@ import express from 'express'
 import path from 'path'
 import fs from 'fs'
 import JSZip from 'jszip'
-import {metadata, styleSheetMd, styleSheetMdBorder} from '../src/variables.js'
+import {generateMetadata, styleSheetMd, styleSheetMdBorder} from '../src/variables.js'
 import ntc from './ntc.js'
 
 const app = express()
@@ -164,6 +164,8 @@ const run = async () => {
     })
 
     app.get('/get', async (req, res) => {
+
+        const metadata = generateMetadata()
 
         const {
             mainBg,

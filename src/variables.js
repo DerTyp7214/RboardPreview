@@ -2,25 +2,27 @@ export const presets = ['default', 'regularAlt']
 
 export const colorVars = ['--main-bg', '--key-bg', '--key-color', '--second-key-bg', '--accent-bg']
 
-export const metadata = {
-    format_version: 3,
-    id: `web_${Date.now()}`,
-    name: 'Rboard Web Theme Creator',
-    prefer_key_border: true,
-    lock_key_border: false,
-    is_light_theme: false,
-    style_sheets: [
-        'variables.css',
-        'style_sheet_md2.css'
-    ],
-    flavors: [
-        {
-            type: 'BORDER',
-            style_sheets: [
-                'style_sheet_md2_border.css'
-            ]
-        }
-    ]
+export const generateMetadata = () => {
+    return {
+        format_version: 3,
+        id: `web_${Date.now()}`,
+        name: 'Rboard Web Theme Creator',
+        prefer_key_border: true,
+        lock_key_border: false,
+        is_light_theme: false,
+        style_sheets: [
+            'variables.css',
+            'style_sheet_md2.css'
+        ],
+        flavors: [
+            {
+                type: 'BORDER',
+                style_sheets: [
+                    'style_sheet_md2_border.css'
+                ]
+            }
+        ]
+    }
 }
 
 export const styleSheetMd = {
