@@ -5,7 +5,7 @@ import express from 'express'
 import path from 'path'
 import fs from 'fs'
 import JSZip from 'jszip'
-import {generateMetadata, styleSheetMd, styleSheetMdBorder} from '../src/variables.js'
+import {assetLinks, generateMetadata, styleSheetMd, styleSheetMdBorder} from '../src/variables.js'
 import ntc from './ntc.js'
 
 const app = express()
@@ -220,6 +220,10 @@ const run = async () => {
         res.setHeader('Content-disposition', `attachment; filename=${themeName}.pack`)
         res.setHeader('Content-type', 'application/pack')
         packZip.generateNodeStream({type: 'nodebuffer'}).pipe(res)
+    })
+
+    app.get('/.well-known/assetlinks.json', (req, res) => {
+        res.json(assetLinks)
     })
 
     app.get('/', (req, res) => {

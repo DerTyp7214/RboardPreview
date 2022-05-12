@@ -2,6 +2,17 @@ export const presets = ['default', 'regularAlt']
 
 export const colorVars = ['--main-bg', '--key-bg', '--key-color', '--second-key-bg', '--accent-bg']
 
+export const assetLinks = [
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "de.dertyp7214.rboardcreatorlibrary",
+            "sha256_cert_fingerprints": ["14:6D:E9:83:C5:73:06:50:D8:EE:B9:95:2F:34:FC:64:16:A0:83:42:E6:1D:BE:A8:8A:04:96:B2:3F:CF:44:E5"]
+        }
+    }
+]
+
 export const generateMetadata = () => {
     return {
         format_version: 3,
@@ -10,18 +21,10 @@ export const generateMetadata = () => {
         prefer_key_border: true,
         lock_key_border: false,
         is_light_theme: false,
-        style_sheets: [
-            'variables.css',
-            'style_sheet_md2.css'
-        ],
-        flavors: [
-            {
-                type: 'BORDER',
-                style_sheets: [
-                    'style_sheet_md2_border.css'
-                ]
-            }
-        ]
+        style_sheets: ['variables.css', 'style_sheet_md2.css'],
+        flavors: [{
+            type: 'BORDER', style_sheets: ['style_sheet_md2_border.css']
+        }]
     }
 }
 
@@ -834,8 +837,7 @@ alpha: 1;
 }
 
 /* end of pill shaped key */
-`,
-    regularAlt: `@def color_header @web_color_bg;
+`, regularAlt: `@def color_header @web_color_bg;
 @def color_base @web_color_bg;
 @def color_icon_action @web_color_label;
 /* This value is not used for action key background, since it is special on material theme. */
@@ -1827,8 +1829,7 @@ alpha: 1;
 	background_color: @web_color_accent_pressed;
 	}
 	
-/* end of pill shaped key */`,
-    regularAlt: `;.keytop {
+/* end of pill shaped key */`, regularAlt: `;.keytop {
     elevation: 0;
     shadow_color: @web_color_key_bg;
     
