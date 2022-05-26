@@ -114,7 +114,8 @@ const analytics = async (req) => {
         mainBg, keyBg, keyColor, secondKeyBg, accentBg, themeName, author
     })}\n`
 
-    fs.appendFileSync(path.join(serverPath, 'stats.csv'), csvString)
+    console.log(csvString)
+    //fs.appendFileSync(path.join(serverPath, 'stats.csv'), csvString)
 }
 
 const run = async () => {
@@ -155,7 +156,7 @@ const run = async () => {
     app.get('/stats', async (req, res) => {
         const csv = []
 
-        const csvString = fs.readFileSync(path.join(serverPath, 'stats.csv'), 'utf-8')
+        const csvString = /*fs.readFileSync(path.join(serverPath, 'stats.csv'), 'utf-8')*/''
 
         for (const line of csvString.split('\n'))
             if (line.trim().length > 0) csv.push(line.split('|'))
