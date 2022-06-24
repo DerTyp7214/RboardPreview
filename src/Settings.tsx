@@ -186,18 +186,29 @@ class Settings extends Component<SettingsProps> {
                     return url
                 }
                 if (navigator.share) {
+                    const shareData: ShareData = {
+                        url: buildUrl()
+                    }
                     const files: File[] = []
-                    await fetch(buildUrl('get')).then(res => res.blob()).then(blob => {
-                        files.push(new File([blob], `${this.state.name}.pack`, {
+                    await fetch(buildUrl('preview')).then(res => res.blob()).then(blob => {
+                        files.push(new File([blob], `${this.state.name}.png`, {
                             lastModified: Date.now(),
                             type: blob.type
                         }))
                     }).catch(() => {
                     })
-                    await navigator.share({
-                        url: buildUrl(),
-                        files
-                    }).then(() => {
+                    await fetch(buildUrl('get')).then(res => res.blob()).then(blob => {
+                        const file = new File([blob], `${this.state.name}.pack`, {
+                            lastModified: Date.now(),
+                            type: blob.type
+                        })
+                        if (navigator.canShare({ ...shareData, files: [...files, file] }))
+                            files.push(file)
+                    }).catch(() => {
+                    })
+                    if (navigator.canShare({ ...shareData, files }))
+                        shareData.files = files
+                    await navigator.share(shareData).then(() => {
                     }).catch(() => {
                         this.setState({
                             ...this.state,
