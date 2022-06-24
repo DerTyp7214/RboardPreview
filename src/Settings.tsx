@@ -165,9 +165,9 @@ class Settings extends Component<SettingsProps> {
             }}/>
         )
 
-        const share = () => {
-            const buildUrl = () => {
-                let url = window.location.origin
+        const share = async () => {
+            const buildUrl = (path = '') => {
+                let url = `${window.location.origin}/${path}`
                 url += `?mainBg=${this.getAttrColor('--main-bg').substring(1)}`
                 url += `&keyBg=${this.getAttrColor('--key-bg').substring(1)}`
                 url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
@@ -178,19 +178,29 @@ class Settings extends Component<SettingsProps> {
                 url += `&preset=${this.props.passPreset?.()}`
                 return url
             }
-            if (navigator.share) navigator.share({
-                url: buildUrl()
-            }).then(() => {
-            }).catch(() => {
-                this.setState({
-                    ...this.state,
-                    snackbar: {
-                        open: true,
-                        text: 'Error while sharing url!'
-                    }
+            if (navigator.share) {
+                const files: File[] = []
+                fetch(buildUrl('get')).then(res => res.blob()).then(blob => {
+                    files.push(new File([blob], `${this.state.name}.pack`, {
+                        lastModified: Date.now(),
+                        type: blob.type
+                    }))
+                }).catch(() => {
                 })
-            })
-            else copyToClipboard(buildUrl()).then(() => {
+                navigator.share({
+                    url: buildUrl(),
+                    files
+                }).then(() => {
+                }).catch(() => {
+                    this.setState({
+                        ...this.state,
+                        snackbar: {
+                            open: true,
+                            text: 'Error while sharing url!'
+                        }
+                    })
+                })
+            } else copyToClipboard(buildUrl()).then(() => {
                 this.setState({
                     ...this.state,
                     snackbar: {
