@@ -1,9 +1,10 @@
-import React, { ChangeEvent, Component, createRef, RefObject, useState } from 'react'
+import React, { ChangeEvent, Component, RefObject, useState } from 'react'
 import { colorVars } from './variables'
 import { Color, ColorPicker, useColor } from 'react-color-palette'
 import ClickAwayListener from 'react-click-away-listener'
 import 'react-color-palette/lib/css/styles.css'
 import { Button, Snackbar, TextField } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 import { isMobile } from 'react-device-detect'
 import { Share } from '@mui/icons-material';
 import { copyToClipboard } from './utils';
@@ -36,12 +37,13 @@ class Settings extends Component<SettingsProps> {
     root: HTMLElement
     rootStyles: CSSStyleDeclaration
 
-    shareButton: RefObject<HTMLButtonElement>
-
     state = {
         name: '',
         author: 'DerTyp7214',
         preset: 'default',
+        share: {
+            loading: false
+        },
         snackbar: {
             open: false,
             text: ''
@@ -52,8 +54,6 @@ class Settings extends Component<SettingsProps> {
         super(props)
         this.root = document.documentElement
         this.rootStyles = getComputedStyle(this.root)
-
-        this.shareButton = createRef<HTMLButtonElement>()
 
         this.parsePreset(props)
     }
@@ -170,65 +170,65 @@ class Settings extends Component<SettingsProps> {
         )
 
         const share = async () => {
-            const button = this.shareButton.current
-            if (button) {
-                button.disabled = true
-                const buildUrl = (path = '') => {
-                    let url = `${window.location.origin}/${path}`
-                    url += `?mainBg=${this.getAttrColor('--main-bg').substring(1)}`
-                    url += `&keyBg=${this.getAttrColor('--key-bg').substring(1)}`
-                    url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
-                    url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
-                    url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
-                    url += `&themeName=${encodeURIComponent(this.state.name)}`
-                    url += `&author=${encodeURIComponent(this.state.author)}`
-                    url += `&preset=${this.props.passPreset?.()}`
-                    return url
+            this.setState({
+                ...this.state,
+                share: {
+                    ...share,
+                    loading: true
                 }
-                if (navigator.share) {
-                    const shareData: ShareData = {
-                        url: buildUrl()
-                    }
-                    const files: File[] = []
-                    await fetch(buildUrl('preview')).then(res => res.blob()).then(blob => {
-                        files.push(new File([blob], `${this.state.name}.png`, {
-                            lastModified: Date.now(),
-                            type: blob.type
-                        }))
-                    }).catch(() => {
-                    })
-                    await fetch(buildUrl('get')).then(res => res.blob()).then(blob => {
-                        const file = new File([blob], `${this.state.name}.pack`, {
-                            lastModified: Date.now(),
-                            type: blob.type
-                        })
-                        if (navigator.canShare({ ...shareData, files: [...files, file] }))
-                            files.push(file)
-                    }).catch(() => {
-                    })
-                    if (navigator.canShare({ ...shareData, files }))
-                        shareData.files = files
-                    await navigator.share(shareData).then(() => {
-                    }).catch(() => {
-                        this.setState({
-                            ...this.state,
-                            snackbar: {
-                                open: true,
-                                text: 'Error while sharing url!'
-                            }
-                        })
-                    })
-                } else copyToClipboard(buildUrl()).then(() => {
+            })
+            const buildUrl = (path = '') => {
+                let url = `${window.location.origin}/${path}`
+                url += `?mainBg=${this.getAttrColor('--main-bg').substring(1)}`
+                url += `&keyBg=${this.getAttrColor('--key-bg').substring(1)}`
+                url += `&keyColor=${this.getAttrColor('--key-color').substring(1)}`
+                url += `&secondKeyBg=${this.getAttrColor('--second-key-bg').substring(1)}`
+                url += `&accentBg=${this.getAttrColor('--accent-bg').substring(1)}`
+                url += `&themeName=${encodeURIComponent(this.state.name)}`
+                url += `&author=${encodeURIComponent(this.state.author)}`
+                url += `&preset=${this.props.passPreset?.()}`
+                return url
+            }
+            if (navigator.share) {
+                const shareData: ShareData = {
+                    url: buildUrl()
+                }
+                const files: File[] = []
+                await fetch(buildUrl('preview')).then(res => res.blob()).then(blob => {
+                    files.push(new File([blob], `${this.state.name}.png`, {
+                        lastModified: Date.now(),
+                        type: blob.type
+                    }))
+                }).catch(() => {
+                })
+                if (navigator.canShare({ ...shareData, files }))
+                    shareData.files = files
+                await navigator.share(shareData).then(() => {
+                }).catch(reason => {
                     this.setState({
                         ...this.state,
                         snackbar: {
                             open: true,
-                            text: 'Copied to Clipboard!'
+                            text: `Error while sharing: ${reason}`
                         }
                     })
                 })
-                button.disabled = false
-            }
+            } else copyToClipboard(buildUrl()).then(() => {
+                this.setState({
+                    ...this.state,
+                    snackbar: {
+                        open: true,
+                        text: 'Copied to Clipboard!'
+                    }
+                })
+            })
+            this.setState({
+                ...this.state,
+                share: {
+                    ...share,
+                    loading: false
+                }
+            })
         }
 
         return <div className='settings' style={{
@@ -315,19 +315,19 @@ class Settings extends Component<SettingsProps> {
                     }}>
                     Export
                 </Button>
-                <Button
+                <LoadingButton
                     fullWidth
                     variant='outlined'
                     color='primary'
                     onClick={share}
-                    ref={this.shareButton}
+                    loading={this.state.share.loading}
                     sx={{
                         margin: '8px',
                         borderWidth: '.08em',
                         borderRadius: '.5em'
                     }}>
                     <Share/>
-                </Button>
+                </LoadingButton>
             </div>
 
             <div style={{
