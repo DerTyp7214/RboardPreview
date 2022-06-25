@@ -193,7 +193,7 @@ class Settings extends Component<SettingsProps> {
                 let shareData: ShareData = {
                     url: buildUrl()
                 }
-                const files: File[] = []
+                /*const files: File[] = []
                 await fetch(buildUrl('preview')).then(res => res.blob()).then(blob => {
                     files.push(new File([blob], `${this.state.name}.png`, {
                         lastModified: Date.now(),
@@ -206,7 +206,7 @@ class Settings extends Component<SettingsProps> {
                     files
                 }
                 if (navigator.canShare({ ...shareData, ...fileData }))
-                    shareData = { ...shareData, ...fileData }
+                    shareData = { ...shareData, ...fileData }*/
                 await navigator.share(shareData).then(() => {
                 }).catch(reason => {
                     this.setState({
