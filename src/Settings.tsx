@@ -190,7 +190,7 @@ class Settings extends Component<SettingsProps> {
                 return url
             }
             if (navigator.share) {
-                const shareData: ShareData = {
+                let shareData: ShareData = {
                     url: buildUrl()
                 }
                 const files: File[] = []
@@ -201,8 +201,12 @@ class Settings extends Component<SettingsProps> {
                     }))
                 }).catch(() => {
                 })
-                if (navigator.canShare({ ...shareData, files }))
-                    shareData.files = files
+                const fileData: ShareData = {
+                    title: `${this.state.name} by ${this.state.author}`,
+                    files
+                }
+                if (navigator.canShare({ ...shareData, ...fileData }))
+                    shareData = { ...shareData, ...fileData }
                 await navigator.share(shareData).then(() => {
                 }).catch(reason => {
                     this.setState({
