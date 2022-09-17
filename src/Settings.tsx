@@ -59,7 +59,7 @@ class Settings extends Component<SettingsProps> {
     }
 
     getThemeName() {
-        return this.state.name
+        return this.state.name.trim() === '' ? 'Pick a fucking name bro' : this.state.name
     }
 
     getAuthorName() {
@@ -78,9 +78,12 @@ class Settings extends Component<SettingsProps> {
                 author,
                 preset
             } = props.preset
-            this.state.name = themeName ? decodeURIComponent(themeName) : themeName
-            this.state.author = author ? decodeURIComponent(author) : author
-            this.state.preset = preset ?? 'default'
+            this.setState({
+                ...this.state,
+                name: themeName ? decodeURIComponent(themeName) : themeName,
+                author: author ? decodeURIComponent(author) : author,
+                preset: preset ?? 'default'
+            })
             if (mainBg) this.root.style.setProperty('--main-bg', mainBg)
             if (keyBg) this.root.style.setProperty('--key-bg', keyBg)
             if (keyColor) this.root.style.setProperty('--key-color', keyColor)
@@ -138,7 +141,7 @@ class Settings extends Component<SettingsProps> {
                 }} onClick={() => {
                     setPicking(true)
                 }
-                }/>
+                } />
                 {picking && <div style={{
                     position: 'absolute',
                     zIndex: 100,
@@ -154,7 +157,7 @@ class Settings extends Component<SettingsProps> {
                                 width={300}
                                 color={color}
                                 onChange={setColor} dark
-                                onChangeComplete={setColor}/>
+                                onChangeComplete={setColor} />
                         </div>
                     </ClickAwayListener>
                 </div>}
@@ -166,7 +169,7 @@ class Settings extends Component<SettingsProps> {
             colorVar={colorVar}
             submitColor={color => {
                 this.root.style.setProperty(colorVar, color.hex)
-            }}/>
+            }} />
         )
 
         const share = async () => {
@@ -271,7 +274,7 @@ class Settings extends Component<SettingsProps> {
                     defaultValue={this.state.author}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({ ...this.state, author: event.target.value })
-                    }}/>
+                    }} />
             </div>
             <div style={{
                 display: 'flex',
@@ -297,7 +300,7 @@ class Settings extends Component<SettingsProps> {
                     defaultValue={this.state.name}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                         this.setState({ ...this.state, name: event.target.value })
-                    }}/>
+                    }} />
             </div>
             <div style={{
                 display: 'flex',
@@ -330,7 +333,7 @@ class Settings extends Component<SettingsProps> {
                         borderWidth: '.08em',
                         borderRadius: '.5em'
                     }}>
-                    <Share/>
+                    <Share />
                 </LoadingButton>
             </div>
 
@@ -371,7 +374,7 @@ class Settings extends Component<SettingsProps> {
                 open={this.state.snackbar.open}
                 autoHideDuration={6000}
                 onClose={() => this.setState({ ...this.state, snackbar: { open: false } })}
-                message={this.state.snackbar.text}/>
+                message={this.state.snackbar.text} />
         </div>
     }
 }
